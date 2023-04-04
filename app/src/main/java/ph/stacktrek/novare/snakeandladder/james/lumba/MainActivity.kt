@@ -6,10 +6,13 @@ import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.size
 import ph.stacktrek.novare.snakeandladder.james.lumba.databinding.ActivityMainBinding
 import ph.stacktrek.novare.snakeandladder.james.lumba.utility.PreferenceUtility
 import kotlin.random.Random
@@ -24,10 +27,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val bundle = intent.extras
-        binding.playerOneText.setText(bundle!!.getString("player1"))
-        binding.playerTwoText.setText(bundle!!.getString("player2"))
-        binding.playerThreeText.setText(bundle!!.getString("player3"))
-        binding.playerFourText.setText(bundle!!.getString("player4"))
+
+        for (i in 0 until bundle!!.size()) {
+
+            val textView = TextView(this)
+            textView.setTextSize(20f)
+            textView.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            textView.text = bundle!!.getString("player${i + 1}")
+
+            binding.gameInfoLinearlayout.addView(textView)
+        }
 
         val playersCoords = HashMap<Int, Array<Int>>()
         playersCoords[1] = arrayOf(0, 10)
@@ -68,12 +80,14 @@ class MainActivity : AppCompatActivity() {
             if(snakeLadderMap.containsKey(
                     "${playersCoords.getValue(currentPlayer)[0]}${playersCoords
                         .getValue(currentPlayer)[1]}")) {
-                newCoords = snakeLadderMap.getValue("${playersCoords.getValue(currentPlayer)[0]}${playersCoords.getValue(currentPlayer)[1]}")
+                newCoords = snakeLadderMap.getValue("${playersCoords
+                    .getValue(currentPlayer)[0]}${playersCoords.getValue(currentPlayer)[1]}")
                 movePlayer(currentPlayer, playersCoords.getValue(currentPlayer), newCoords)
                 playersCoords[currentPlayer] = newCoords
             }
 
-            if (playersCoords.getValue(currentPlayer)[0] == 10 && playersCoords.getValue(currentPlayer)[1] == 1) {
+            if (playersCoords.getValue(currentPlayer)[0] == 10 && playersCoords
+                    .getValue(currentPlayer)[1] == 1) {
                 showCongratulationDialog(bundle!!.getString("player$currentPlayer").toString())
             }
 
@@ -140,17 +154,17 @@ class MainActivity : AppCompatActivity() {
 
     fun showCurrentPlayer(currentPlayer: Int) {
 
-        binding.playerOneText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16F)
-        binding.playerTwoText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16F)
-        binding.playerThreeText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16F)
-        binding.playerFourText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16F)
-
-        when (currentPlayer) {
-            1 -> {binding.playerOneText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)}
-            2 -> {binding.playerTwoText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)}
-            3 -> {binding.playerThreeText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)}
-            4 -> {binding.playerFourText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)}
+        if (currentPlayer - 1 > 0) {
+            val pastTextView = binding.gameInfoLinearlayout.getChildAt(currentPlayer - 1) as TextView
+            pastTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
+        } else {
+            val pastTextView = binding.gameInfoLinearlayout.getChildAt(binding
+                .gameInfoLinearlayout.size - 1) as TextView
+            pastTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
         }
+
+        val presentTextView = binding.gameInfoLinearlayout.getChildAt(currentPlayer) as TextView
+        presentTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30F)
     }
 
     fun showCongratulationDialog(player: String) {
