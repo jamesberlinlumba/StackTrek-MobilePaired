@@ -29,106 +29,52 @@ class MainActivity : AppCompatActivity() {
         binding.playerThreeText.setText(bundle!!.getString("player3"))
         binding.playerFourText.setText(bundle!!.getString("player4"))
 
-        var player1Coords = arrayOf(0, 10)
-        var player2Coords = arrayOf(0, 10)
-        var player3Coords = arrayOf(0, 10)
-        var player4Coords = arrayOf(0, 10)
+        val playersCoords = HashMap<Int, Array<Int>>()
+        playersCoords[1] = arrayOf(0, 10)
+        playersCoords[2] = arrayOf(0, 10)
+        playersCoords[3] = arrayOf(0, 10)
+        playersCoords[4] = arrayOf(0, 10)
 
         val snakeLadderMap = HashMap<String, Array<Int>>()
 //        Snake
-        snakeLadderMap.put("27", arrayOf(10, 10))
-        snakeLadderMap.put("67", arrayOf(6, 10))
-        snakeLadderMap.put("86", arrayOf(6, 8))
-        snakeLadderMap.put("24", arrayOf(8, 9))
-        snakeLadderMap.put("82", arrayOf(4, 8))
-        snakeLadderMap.put("51", arrayOf(6, 5))
-        snakeLadderMap.put("71", arrayOf(8, 3))
+        snakeLadderMap["27"] = arrayOf(10, 10)
+        snakeLadderMap["67"] = arrayOf(6, 10)
+        snakeLadderMap["86"] = arrayOf(6, 8)
+        snakeLadderMap["24"] = arrayOf(8, 9)
+        snakeLadderMap["82"] = arrayOf(4, 8)
+        snakeLadderMap["51"] = arrayOf(6, 5)
+        snakeLadderMap["71"] = arrayOf(8, 3)
 //        Ladder
-        snakeLadderMap.put("110", arrayOf(8, 7))
-        snakeLadderMap.put("410", arrayOf(4, 9))
-        snakeLadderMap.put("810", arrayOf(10, 8))
-        snakeLadderMap.put("18", arrayOf(2, 6))
-        snakeLadderMap.put("88", arrayOf(6, 3))
-        snakeLadderMap.put("106", arrayOf(7, 4))
-        snakeLadderMap.put("13", arrayOf(2, 1))
-        snakeLadderMap.put("103", arrayOf(9, 1))
+        snakeLadderMap["110"] = arrayOf(8, 7)
+        snakeLadderMap["410"] = arrayOf(4, 9)
+        snakeLadderMap["810"] = arrayOf(10, 8)
+        snakeLadderMap["18"] = arrayOf(2, 6)
+        snakeLadderMap["88"] = arrayOf(6, 3)
+        snakeLadderMap["106"] = arrayOf(7, 4)
+        snakeLadderMap["13"] = arrayOf(2, 1)
+        snakeLadderMap["103"] = arrayOf(9, 1)
 
         var currentPlayer = 1
         showCurrentPlayer(currentPlayer)
-
-        PreferenceUtility(applicationContext).apply {
-            println("Preference 1: ${getStringPreferences("1" )}")
-            println("Preference 2: ${getStringPreferences("2" )}")
-            println("Preference 3: ${getStringPreferences("3" )}")
-            println("Preference 4: ${getStringPreferences("4" )}")
-            println("Preference 5: ${getStringPreferences("5" )}")
-        }
 
         binding.rollButton.setOnClickListener {
 
             val diceResult = rollDice()
 
-            when (currentPlayer) {
-                1 -> {
-                    var newCoords = updateCoords(diceResult, player1Coords)
-                    movePlayer(currentPlayer, player1Coords, newCoords)
-                    player1Coords = newCoords
+            var newCoords = updateCoords(diceResult, playersCoords.getValue(currentPlayer))
+            movePlayer(currentPlayer, playersCoords.getValue(currentPlayer), newCoords)
+            playersCoords[currentPlayer] = newCoords
 
-                    if(snakeLadderMap.containsKey("${player1Coords[0]}${player1Coords[1]}")) {
-                        newCoords = snakeLadderMap.getValue("${player1Coords[0]}${player1Coords[1]}")
-                        movePlayer(currentPlayer, player1Coords, newCoords)
-                        player1Coords = newCoords
-                    }
+            if(snakeLadderMap.containsKey(
+                    "${playersCoords.getValue(currentPlayer)[0]}${playersCoords
+                        .getValue(currentPlayer)[1]}")) {
+                newCoords = snakeLadderMap.getValue("${playersCoords.getValue(currentPlayer)[0]}${playersCoords.getValue(currentPlayer)[1]}")
+                movePlayer(currentPlayer, playersCoords.getValue(currentPlayer), newCoords)
+                playersCoords[currentPlayer] = newCoords
+            }
 
-                    if (player1Coords[0] == 10 && player1Coords[1] == 1) {
-                        showCongratulationDialog(bundle!!.getString("player1").toString())
-                    }
-                }
-                2 -> {
-                    var newCoords = updateCoords(diceResult, player2Coords)
-                    movePlayer(currentPlayer, player2Coords, newCoords)
-                    player2Coords = newCoords
-
-                    if(snakeLadderMap.containsKey("${player2Coords[0]}${player2Coords[1]}")) {
-                        newCoords = snakeLadderMap.getValue("${player2Coords[0]}${player2Coords[1]}")
-                        movePlayer(currentPlayer, player2Coords, newCoords)
-                        player2Coords = newCoords
-                    }
-
-                    if (player2Coords[0] == 10 && player2Coords[1] == 1) {
-                        showCongratulationDialog(bundle!!.getString("player2").toString())
-                    }
-                }
-                3 -> {
-                    var newCoords = updateCoords(diceResult, player3Coords)
-                    movePlayer(currentPlayer, player3Coords, newCoords)
-                    player3Coords = newCoords
-
-                    if(snakeLadderMap.containsKey("${player3Coords[0]}${player3Coords[1]}")) {
-                        newCoords = snakeLadderMap.getValue("${player3Coords[0]}${player3Coords[1]}")
-                        movePlayer(currentPlayer, player3Coords, newCoords)
-                        player3Coords = newCoords
-                    }
-
-                    if (player3Coords[0] == 10 && player3Coords[1] == 1) {
-                        showCongratulationDialog(bundle!!.getString("player3").toString())
-                    }
-                }
-                4 -> {
-                    var newCoords = updateCoords(diceResult, player4Coords)
-                    movePlayer(currentPlayer, player4Coords, newCoords)
-                    player4Coords = newCoords
-
-                    if(snakeLadderMap.containsKey("${player4Coords[0]}${player4Coords[1]}")) {
-                        newCoords = snakeLadderMap.getValue("${player4Coords[0]}${player4Coords[1]}")
-                        movePlayer(currentPlayer, player4Coords, newCoords)
-                        player4Coords = newCoords
-                    }
-
-                    if (player4Coords[0] == 10 && player4Coords[1] == 1) {
-                        showCongratulationDialog(bundle!!.getString("player4").toString())
-                    }
-                }
+            if (playersCoords.getValue(currentPlayer)[0] == 10 && playersCoords.getValue(currentPlayer)[1] == 1) {
+                showCongratulationDialog(bundle!!.getString("player$currentPlayer").toString())
             }
 
             currentPlayer++
