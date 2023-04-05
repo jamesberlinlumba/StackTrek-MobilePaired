@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/very_dark_gray">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -747,7 +747,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Players:"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
 
@@ -765,14 +766,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:text="Roll" />
+                android:text="Roll"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/end_turn_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:text="End Turn"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/dice_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="100dp"
-                android:textSize="40sp" />
+                android:textSize="40sp"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
 

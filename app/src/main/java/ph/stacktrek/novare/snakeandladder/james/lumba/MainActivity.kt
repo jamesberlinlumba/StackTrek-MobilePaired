@@ -6,9 +6,10 @@ import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -32,8 +33,9 @@ class MainActivity : AppCompatActivity() {
 
             val textView = TextView(this)
             textView.setTextSize(20f)
+            textView.setTextColor(Color.WHITE)
             textView.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             textView.text = bundle!!.getString("player${i + 1}")
@@ -71,6 +73,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.rollButton.setOnClickListener {
 
+            binding.rollButton.visibility = View.GONE
+            binding.endTurnButton.visibility = View.VISIBLE
+            binding.diceText.visibility = View.VISIBLE
+
             val diceResult = rollDice()
 
             var newCoords = updateCoords(diceResult, playersCoords.getValue(currentPlayer))
@@ -90,6 +96,12 @@ class MainActivity : AppCompatActivity() {
                     .getValue(currentPlayer)[1] == 1) {
                 showCongratulationDialog(bundle!!.getString("player$currentPlayer").toString())
             }
+        }
+
+        binding.endTurnButton.setOnClickListener {
+            binding.endTurnButton.visibility = View.GONE
+            binding.rollButton.visibility = View.VISIBLE
+            binding.diceText.visibility = View.GONE
 
             currentPlayer++
             if (currentPlayer > bundle.size()) {
@@ -146,6 +158,8 @@ class MainActivity : AppCompatActivity() {
         textView.setTextSize(35f)
         textView.setTypeface(null, Typeface.BOLD)
         textView.setTextColor(Color.rgb(255,165,0))
+        textView.gravity = Gravity.CENTER
+        textView.setTextColor(Color.BLUE)
         textView.text = currentPlayer.toString()
 
         presentCounter.addView(textView)
